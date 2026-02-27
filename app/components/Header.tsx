@@ -13,7 +13,6 @@ export default function Header() {
   const [user, setUser] = useState<any>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // ✅ โหลด user ตอน mount
   useEffect(() => {
     const loadUser = () => {
       const storedUser = localStorage.getItem("user");
@@ -22,7 +21,6 @@ export default function Header() {
 
     loadUser();
 
-    // ฟังทั้ง storage และ custom event
     window.addEventListener("storage", loadUser);
     window.addEventListener("userChanged", loadUser);
 
@@ -32,7 +30,6 @@ export default function Header() {
     };
   }, []);
 
-  // ✅ logout
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
@@ -40,13 +37,11 @@ export default function Header() {
 
     setUser(null);
 
-    // แจ้งให้ Header อัพเดต
     window.dispatchEvent(new Event("userChanged"));
 
     router.push("/");
   };
 
-  // ปิด dropdown ถ้าคลิกข้างนอก
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -114,6 +109,14 @@ export default function Header() {
               <span className="text-slate-700">
                 👤 {user.fullName || user.email}
               </span>
+              {user.role === "admin" && (
+                <Link
+                  href="/admin"
+                  className="bg-[#B89146] text-white px-4 py-2 hover:bg-[#1A1A1A] transition-colors"
+                >
+                  ⚙ Admin
+                </Link>
+              )}
               <button
                 onClick={handleLogout}
                 className="text-red-500 hover:text-red-700"
